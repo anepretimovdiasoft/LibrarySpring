@@ -1,9 +1,5 @@
 package com.samsung.service;
 
-import com.samsung.dao.AuthorDao;
-import com.samsung.dao.BookDao;
-import com.samsung.dao.CommentDao;
-import com.samsung.dao.GenreDao;
 import com.samsung.domain.Author;
 import com.samsung.domain.Book;
 import com.samsung.domain.Comment;
@@ -16,24 +12,23 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class LibraryDemoSout implements LibraryDemo {
 
-    private final AuthorDao authorDao;
-    private final GenreDao genreDao;
-    private final BookDao bookDao;
-    private final CommentDao commentDao;
+    private final AuthorService authorService;
+    private final GenreService genreService;
+    private final BookService bookService;
+    private final CommentService commentService;
 
     @Override
-    @Transactional
     public void authorDemo() {
 
         Author newAuthor = Author.builder()
                 .name("Новый Автор")
                 .build();
 
-        authorDao.save(newAuthor);
+        authorService.insert(newAuthor);
 
         System.out.println("======Все авторы======");
 
-        for (Author author : authorDao.findAll()) {
+        for (Author author : authorService.getAll()) {
 
             System.out.println(author);
         }
@@ -42,18 +37,17 @@ public class LibraryDemoSout implements LibraryDemo {
     }
 
     @Override
-    @Transactional
     public void genreDemo() {
 
         Genre newGenre = Genre.builder()
                 .name("Новый Жанр")
                 .build();
 
-        genreDao.save(newGenre);
+        genreService.insert(newGenre);
 
         System.out.println("======Все жанры======");
 
-        for (Genre genre : genreDao.findAll()) {
+        for (Genre genre : genreService.getAll()) {
 
             System.out.println(genre);
         }
@@ -67,7 +61,7 @@ public class LibraryDemoSout implements LibraryDemo {
 
         System.out.println("======Все комменты======");
 
-        for (Comment comment : commentDao.findAll()) {
+        for (Comment comment : commentService.getAll()) {
 
             System.out.println(comment.getBook().getName() + " : " + comment.getContent());
         }
@@ -79,17 +73,11 @@ public class LibraryDemoSout implements LibraryDemo {
     @Transactional
     public void bookDemo() {
 
-        Book book = Book.builder()
-                .name("Новая книга")
-                .author(authorDao.findByName("Новый Автор"))
-                .genre(genreDao.findByName("Новый Жанр"))
-                .build();
-
-        bookDao.save(book);
+        bookService.insert("Новая книга", "Новый Жанр", "Новый Автор");
 
         System.out.println("======Все книги======");
 
-        for (Book book1 : bookDao.findAll()) {
+        for (Book book1 : bookService.getAll()) {
 
             System.out.println(
                     book1.getName() + " : " +
